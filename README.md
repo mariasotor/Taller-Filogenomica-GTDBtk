@@ -1,6 +1,6 @@
 # Clasificación taxonómica e inferencia filogenética de MAGs con GTDB-Tk
 
-Este taller se centra en la clasificación taxonómica y la inferencia de un arbol filogenético de genomas ensamblados a partir de metagenomas (MAGs) utilizando la herramienta GTDB-Tk. Ademas, se describe cómo GTDB-Tk emplea la base de datos GTDB para asignar una taxonomía estandarizada basada en genomas y generar árboles filogenéticos a partir de genes marcadores conservados.
+Este taller se centra en la clasificación taxonómica y la inferencia de un arbol filogenético de genomas ensamblados a partir de metagenomas (MAGs) utilizando la herramienta GTDB-Tk. Ademas, se describe cómo GTDB-Tk emplea la base de datos GTDB para asignar una taxonomía estandarizada basada en genomas e inferir un árbol filogenético a partir de genes marcadores conservados.
 
 A lo largo del taller, se realizarán ejercicios prácticos en un entorno de cómputo de alto rendimiento (HPC) para ejecutar los flujos de trabajo de GTDB-Tk, desde la preparación de MAGs como entrada hasta la obtención e interpretación de las clasificaciones taxonómicas y de los archivos asociados a la inferencia filogenética.
 
