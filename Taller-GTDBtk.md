@@ -44,7 +44,7 @@ Esto generará un archivo `batchfile.txt` en el directorio `taller-gtdbtk`, list
 
 Cree dentro de su carpeta `taller-gtdbtk` un script en Bash llamado `run_gtdbtk_classify.sh`, copie en él el código mostrado a continuación y actualice la variable `batchfile` con la ruta correcta al archivo `batchfile.txt` generado previamente. Este script enviará un trabajo a SLURM para procesar cada MAG listado en el batchfile y generará los resultados de la clasificación taxonómica en la carpeta `gtdbtk_classify`.
 
-```
+```bash
 #!/bin/bash
 
 #SBATCH -J gtdbtk_classify
@@ -56,7 +56,7 @@ Cree dentro de su carpeta `taller-gtdbtk` un script en Bash llamado `run_gtdbtk_
 #SBATCH --mem=100000
 
 source /hpcfs/apps/conda4.12.0/bin/activate
-conda activate conda activate gtdbtk-2.5.2
+conda activate gtdbtk-2.5.2
 
 batchfile="/path/to/batchfile.txt"
 
@@ -74,7 +74,7 @@ sbatch run_gtdbtk_classify.sh
 
 Ahora cree un script en Bash llamado `run_gtdbtk_tree.sh` tambien dentro de su carpeta `taller-gtdbtk`, copie en él el código mostrado a continuación y actualice la variable batchfile con la ruta correcta al archivo batchfile.txt generado previamente. Este script enviará un trabajo a SLURM para generar un árbol filogenético *de novo* con los MAGs incluidos en el batchfile, enraizado usando p__Chloroflexota. Todos los archivos generados se guardaran en la carpeta `gtdbtk_tree`.
 
-```
+```bash
 #!/bin/bash
 
 #SBATCH -J gtdbtk_tree
@@ -82,11 +82,11 @@ Ahora cree un script en Bash llamado `run_gtdbtk_tree.sh` tambien dentro de su c
 #SBATCH -e gtdbtk_tree_%j.err
 #SBATCH -o gtdbtk_tree_%j.out
 #SBATCH --cpus-per-task=8
-#SBATCH --time=4:00:00	
+#SBATCH --time=10:00:00	
 #SBATCH --mem=100000
 
 source /hpcfs/apps/conda4.12.0/bin/activate
-conda activate conda activate gtdbtk-2.5.2
+conda activate gtdbtk-2.5.2
 
 batchfile="/path/to/batchfile.txt"
 
@@ -101,4 +101,63 @@ chmod +x run_gtdbtk_tree.sh
 sbatch run_gtdbtk_tree.sh
 ```
 
+### Descripción del output
 
+#### classify_wf
+Una vez que la clasificación de MAGs haya finalizado, podrá visualizar la siguiente estructura dentro de la carpeta `gtdbtk_classify`:
+
+📂 `gtdbtk_classify`/ <br>
+│── 📂 `align`/ <br>
+│── 📂 `classify`/ <br>
+│── 📂 `identify`/  <br>
+│── 📄 `gtdbtk.ar53.summary.tsv` <br>
+│── 📄 `gtdbtk.bac120.summary.tsv` <br>
+│── 📄 `gtdbtk.log` <br>
+│── 📄 `gtdbtk.warnings.log`
+
+- `align` – Contiene los alineamientos de secuencias múltiples de los genes marcadores utilizados para la clasificación taxonómica.
+- `classify` – Incluye los archivos que describen la ubicación de los genomas en el árbol de referencia de GTDB y sus asignaciones taxonómicas.
+- `identify` – Contiene los resultados de identificación de genes marcadores, donde GTDB-Tk detecta los genes conservados y evalúa la calidad del genoma antes de clasificarlo.
+- `gtdbtk.ar53.summary.tsv` – Archivo con las clasificaciones taxonómicas de los genomas arqueales, basadas en la base de datos arqueal de GTDB (ar53).
+- `gtdbtk.bac120.summary.tsv` – Archivo con las clasificaciones taxonómicas de los genomas bacterianos, basadas en la base de datos bacteriana de GTDB (bac120).
+- `gtdbtk.log` y `gtdbtk.warnings.log` – Archivos de log que documentan la ejecución de GTDB-Tk, incluyendo información del proceso y advertencias o problemas encontrados.
+
+#### de_novo_wf
+Una vez que este proceso haya finalizado, podrá visualizar la siguiente estructura dentro de la carpeta `gtdbtk_tree`:
+
+📂 `gtdbtk_tree`/ <br>
+│── 📂 `align`/ <br>
+│── 📂 `identify`/ <br>
+│── 📂 `infer`/  <br>
+│── 📄 `gtdbtk.bac120.decorated.tree` <br>
+│── 📄 `gtdbtk.bac120.decorated.tree-table` <br>
+│── 📄 `gtdbtk.log` <br>
+│── 📄 `gtdbtk.warnings.log`
+
+- `align` – Contiene los alineamientos múltiples (MSA) de los genes marcadores utilizados para la construcción del árbol *de novo*. Estos archivos pueden emplearse como entrada para programas de inferencia filogenética externos, como IQ-TREE, en caso de que desee realizar tu propio análisis filogenético y no utilizar directamente el árbol generado por GTDB-Tk.
+- `identify` – Incluye los resultados de la etapa de identificación de genes marcadores, donde GTDB-Tk detecta los genes correspondientes y evalúa la calidad de los MAGs antes de la inferencia del árbol.
+- `infer` – Contiene los archivos generados durante la fase de inferencia filogenética, en la que GTDB-Tk utiliza FastTree (con el modelo WAG+GAMMA) para construir el árbol de novo a partir de los MAGs analizados.
+- `gtdbtk.bac120.decorated.tree` – Árbol filogenético de novo para los MAGs bacterianos analizados, decorado con la taxonomía GTDB. Este es el archivo principal del análisis *de novo*: puede descargarse para visualizarlo en programas como FigTree, iTOL, R (phytools, ggtree) o seguir procesándose según las necesidades del usuario.
+- `gtdbtk.bac120.decorated.tree-table` – Tabla asociada al árbol anterior que resume la asignación taxonómica.
+
+### Procesamiento del archivo gtdbtk.bac120.decorated.tree
+El archivo `gtdbtk.bac120.decorated.tree` contiene el árbol filogenético generado por el flujo `de_novo_wf` de GTDB-Tk, decorado con la taxonomía GTDB. Este árbol está en formato Newick, pero incluye múltiples caracteres `;` que algunos programas de visualización filogenética interpretan incorrectamente como el final del árbol y genera errores de lectura.
+
+Para evitar errores al cargar el archivo en programas como FigTree o iTOL, es necesario realizar una corrección previa:
+
+Abrir el archivo `.tree` en un editor de texto y reemplazar todos los caracteres `;` por `:`, excepto el último `;` que marca el final del árbol.
+
+Una vez corregido, el archivo puede usarse como entrada para análisis adicionales, por ejemplo rerooting, edición o anotación avanzada.
+
+Además, debido a que el flujo `de_novo_wf` requiere la adición de un grupo extenso como outgroup, este puede eliminarse o redefinirse posteriormente utilizando herramientas de manipulación de árboles, como el paquete `ape` de `R`. Por ejemplo:
+
+```R
+library(ape)
+
+tree <- read.tree("gtdbtk.bac120.decorated.tree")
+ids_to_keep <- readLines("genomes_for_tree.txt") # Archivo de texto que contiene la lista de IDs de los MAGs que se desea conservar en el árbol filogenético.
+
+tree_no_outgroup <- keep.tip(tree, ids_to_keep) 
+write.tree(pruned_tree, file = "tree_no_outgroup.nwk")
+
+```
