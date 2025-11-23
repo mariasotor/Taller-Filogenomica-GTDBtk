@@ -6,4 +6,4 @@ A lo largo del taller, se realizarán ejercicios prácticos en un entorno de có
 
 Los MAGs analizados en este taller provienen de la iniciativa Latinbiota y del proyecto de CABANAnet “Exploring the Human Gut Microbiome Diversity in Latin America: Focus on Populations at Nutritional Risk”. Estos genomas fueron reconstruidos a partir de datos de secuenciación shotgun de muestras fecales obtenidas en comunidades rurales y urbanas de diversas regiones latinoamericanas.
 
-Pueden acceder al taller mediante el siguiente link: [Taller GTBD-Tk](https://github.com/mariasotor/Taller-Filogenomica-GTDBtk/blob/main/Taller-GTDBtk)
+Pueden acceder al taller mediante el siguiente link: [Taller GTBD-Tk](https://github.com/mariasotor/Taller-Filogenomica-GTDBtk/blob/main/Taller-GTDBtk.md)
