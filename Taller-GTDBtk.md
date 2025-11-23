@@ -90,7 +90,7 @@ conda activate gtdbtk-2.5.2
 
 batchfile="/path/to/batchfile.txt"
 
-gtdbtk de_novo_wf --batchfile ${file} --bacteria --outgroup_taxon p__Chloroflexota --out_dir gtdbtk_tree -x fasta --cpus 8
+gtdbtk de_novo_wf --batchfile ${batchfile} --bacteria --outgroup_taxon p__Chloroflexota --out_dir gtdbtk_tree -x fasta --cpus 8
  
 ```
 
