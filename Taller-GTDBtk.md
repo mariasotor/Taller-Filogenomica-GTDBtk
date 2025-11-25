@@ -27,7 +27,7 @@ Cree una nueva carpeta en su espacio de trabajo llamada `taller-gtdbtk`. Dentro 
 ├── 📁 `gtdbtk_tree`
 
 ### Generar el batchfile
-Un batch file es un archivo de texto con dos columnas que contiene las rutas de los MAGs junto con sus identificadores correspondientes (ID del MAG), lo que facilita el procesamiento de múltiples archivos de manera estructurada. Este archivo se utilizará como entrada para los analisis con GTDB-Tk.
+Un batchfile es un archivo de texto con dos columnas que contiene las rutas de los MAGs junto con sus identificadores correspondientes (ID del MAG), lo que facilita el procesamiento de múltiples archivos de manera estructurada. Este archivo se utilizará como entrada para los analisis con GTDB-Tk.
 
 Los MAGs que se utilizarán durante este taller están ubicados en:
 `/hpcfs/home/cursos/bcom4101/Filogenomica2025/alejandra_soto/taller-GTBtk/mags`
@@ -82,7 +82,7 @@ Ahora cree un script en Bash llamado `run_gtdbtk_tree.sh` tambien dentro de su c
 #SBATCH -e gtdbtk_tree_%j.err
 #SBATCH -o gtdbtk_tree_%j.out
 #SBATCH --cpus-per-task=8
-#SBATCH --time=10:00:00	
+#SBATCH --time=48:00:00	
 #SBATCH --mem=100000
 
 source /hpcfs/apps/conda4.12.0/bin/activate
